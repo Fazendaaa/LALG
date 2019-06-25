@@ -515,10 +515,10 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 }
 
 // parseCallExpression :
-func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
+func (p *Parser) parseCallExpression(procedure ast.Expression) ast.Expression {
 	expression := &ast.CallExpression{
-		Token:    p.currentToken,
-		Function: function,
+		Token:     p.currentToken,
+		Procedure: procedure,
 	}
 	expression.Arguments = p.parseCallArguments()
 

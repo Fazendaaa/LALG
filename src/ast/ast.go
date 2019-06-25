@@ -112,7 +112,7 @@ type ProcedureLiteral struct {
 // CallExpression :
 type CallExpression struct {
 	Token     token.Token
-	Function  Expression
+	Procedure Expression
 	Arguments []Expression
 }
 
@@ -381,7 +381,7 @@ func (ce *CallExpression) String() string {
 		arguments = append(arguments, a.String())
 	}
 
-	out.WriteString(ce.Function.String())
+	out.WriteString(ce.Procedure.String())
 	out.WriteString("(")
 	out.WriteString(strings.Join(arguments, ", "))
 	out.WriteString(")")

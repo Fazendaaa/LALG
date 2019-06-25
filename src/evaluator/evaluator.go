@@ -265,8 +265,8 @@ func extendendFunctionEnvironment(fn *object.Function, arguments []object.Object
 	return environment
 }
 
-// applyFunction :
-func applyFunction(fn object.Object, arguments []object.Object) object.Object {
+// applyProcedure :
+func applyProcedure(fn object.Object, arguments []object.Object) object.Object {
 	switch function := fn.(type) {
 	case *object.Function:
 		extendendEnvironment := extendendFunctionEnvironment(function, arguments)
@@ -319,17 +319,7 @@ func Eval(node ast.Node, environment *object.Environment) object.Object {
 		return evalBlockStatement(node, environment)
 	case *ast.ConditionalExpression:
 		return evalConditionalExpression(node, environment)
-	case *ast.ReturnStatement:
-		value := Eval(node.ReturnValue, environment)
-
-		if isError(value) {
-			return value
-		}
-
-		return &object.ReturnValue{
-			Value: value,
-		}
-	case *ast.LetStatement:
+	case *ast.VarStatement:
 		value := Eval(node.Value, environment)
 
 		if isError(value) {
@@ -339,20 +329,20 @@ func Eval(node ast.Node, environment *object.Environment) object.Object {
 		environment.Set(node.Name.Value, value)
 	case *ast.Identifier:
 		return evalIdentifier(node, environment)
-	case *ast.FunctionLiteral:
+	case *ast.ProcedureLiteral:
 		parameters := node.Parameters
 		body := node.Body
 
-		return &object.Function{
+		return &object.Procedure{
 			Parameters:  parameters,
 			Environment: environment,
 			Body:        body,
 		}
 	case *ast.CallExpression:
-		function := Eval(node.Function, environment)
+		procedure := Eval(node.Procedure, environment)
 
-		if isError(function) {
-			return function
+		if isError(procedure) {
+			return procedure
 		}
 
 		arguments := evalExpression(node.Arguments, environment)
@@ -361,11 +351,7 @@ func Eval(node ast.Node, environment *object.Environment) object.Object {
 			return arguments[0]
 		}
 
-		return applyFunction(function, arguments)
-	case *ast.StringLiteral:
-		return &object.String{
-			Value: node.Value,
-		}
+		return applyProcedure(procedure, arguments)
 	}
 
 	return nil
