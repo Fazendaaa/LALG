@@ -191,6 +191,46 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	return statement
 }
 
+// parseConstStatement :
+func (p *Parser) parseConstStatement() *ast.ConstStatement {
+	statement := &ast.ConstStatement{
+		Token: p.currentToken,
+	}
+
+	if !p.expectPeek(token.IDENTIFIER) {
+		return nil
+	}
+
+	statement.Name = &ast.Identifier{
+		Token: p.currentToken,
+		Value: p.currentToken.Literal,
+	}
+
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
+
+	statement.Type = p.expectType()
+
+	if "ILLEGAL" == statement.Type.Type {
+		return nil
+	}
+
+	if !p.expectPeek(token.ASSIGN) {
+		return nil
+	}
+
+	p.nextToken()
+
+	statement.Value = p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
+	}
+
+	return statement
+}
+
 // parseIdentifier :
 func (p *Parser) parseIdentifier() ast.Expression {
 	return &ast.Identifier{
@@ -204,6 +244,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.currentToken.Type {
 	case token.VAR:
 		return p.parseVarStatement()
+	case token.CONST:
+		return p.parseConstStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
@@ -457,14 +499,6 @@ func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
 	expression.Arguments = p.parseCallArguments()
 
 	return expression
-}
-
-// parseStringLiteral :
-func (p *Parser) parseStringLiteral() ast.Expression {
-	return &ast.StringLiteral{
-		Token: p.currentToken,
-		Value: p.currentToken.Literal,
-	}
 }
 
 // peekErrors :

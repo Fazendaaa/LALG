@@ -2,7 +2,6 @@ package parser
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"../ast"
@@ -30,7 +29,36 @@ func testVarStatements(t *testing.T, s ast.Statement, name string) bool {
 		return false
 	}
 	if varStatement.Name.TokenLiteral() != name {
-		t.Errorf("lestStatement.Name.TokenLiteral() not '%s', got=%s", name, varStatement.Name.TokenLiteral())
+		t.Errorf("varStatement.Name.TokenLiteral() not '%s', got=%s", name, varStatement.Name.TokenLiteral())
+
+		return false
+	}
+
+	return true
+}
+
+// testConstStatements :
+func testConstStatements(t *testing.T, s ast.Statement, name string) bool {
+	if "const" != s.TokenLiteral() {
+		t.Errorf("s.TokenLiteral not 'const', got=%q", s.TokenLiteral())
+
+		return false
+	}
+
+	constStatement, ok := s.(*ast.ConstStatement)
+
+	if !ok {
+		t.Errorf("s not *ast.ConstStatement, got=%T", s)
+
+		return false
+	}
+	if constStatement.Name.Value != name {
+		t.Errorf("constStatement.Name.Value not '%s', got=%s", name, constStatement.Name.Value)
+
+		return false
+	}
+	if constStatement.Name.TokenLiteral() != name {
+		t.Errorf("constStatement.Name.TokenLiteral() not '%s', got=%s", name, constStatement.Name.TokenLiteral())
 
 		return false
 	}
@@ -88,34 +116,6 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	return true
 }
 
-// testBooleanLiteral :
-func testBooleanLiteral(t *testing.T, expression ast.Expression, value bool) bool {
-	boolean, ok := expression.(*ast.Boolean)
-
-	if !ok {
-		t.Errorf("expression not *ast.Boolean, got=%T", expression)
-
-		return false
-	}
-
-	if boolean.Value != value {
-		t.Errorf("boolean.Value not '%t', got=%t", boolean.Value, value)
-
-		return false
-	}
-
-	// This convertion is needed because TypeR uses booleans values in an upper case
-	converted := strings.ToLower(boolean.TokenLiteral())
-
-	if converted != fmt.Sprintf("%t", value) {
-		t.Errorf("boolean.TokenLiteral() not '%t', got=%s", value, converted)
-
-		return false
-	}
-
-	return true
-}
-
 // testLiteralExpresion :
 func testLiteralExpresion(t *testing.T, expression ast.Expression, expected interface{}) bool {
 	switch v := expected.(type) {
@@ -125,8 +125,6 @@ func testLiteralExpresion(t *testing.T, expression ast.Expression, expected inte
 		return testIntegerLiteral(t, expression, v)
 	case string:
 		return testIdentifier(t, expression, v)
-	case bool:
-		return testBooleanLiteral(t, expression, v)
 	}
 
 	t.Errorf("type of expression not handled, got=%T", expression)
@@ -220,6 +218,55 @@ func TestVarStatements(t *testing.T) {
 		}
 
 		value := statement.(*ast.VarStatement).Value
+
+		if !testLiteralExpresion(t, value, tt.expectedValue) {
+			return
+		}
+	}
+}
+
+// TestConstStatements :
+func TestConstStatements(t *testing.T) {
+	tests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      interface{}
+	}{
+		{
+			"const x: integer := 5;",
+			"x",
+			5,
+		},
+		{
+			"const y: real :=10;",
+			"y",
+			10,
+		},
+		{
+			"const foo: real := y;",
+			"foo",
+			"y",
+		},
+	}
+
+	for _, tt := range tests {
+		l := lexer.InitializeLexer(tt.input)
+		p := InitializeParser(l)
+		program := p.ParseProgram()
+
+		checkParserErrors(t, p)
+
+		if 1 != len(program.Statements) {
+			t.Fatalf("program.Statements does not contains %d statements, got=%d\n", 1, len(program.Statements))
+		}
+
+		statement := program.Statements[0]
+
+		if !testConstStatements(t, statement, tt.expectedIdentifier) {
+			return
+		}
+
+		value := statement.(*ast.ConstStatement).Value
 
 		if !testLiteralExpresion(t, value, tt.expectedValue) {
 			return

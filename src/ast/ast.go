@@ -44,10 +44,12 @@ type VarStatement struct {
 	Value Expression
 }
 
-// ReturnStatement :
-type ReturnStatement struct {
-	Token       token.Token
-	ReturnValue Expression
+// ConstStatement :
+type ConstStatement struct {
+	Token token.Token
+	Type  token.Token
+	Name  *Identifier
+	Value Expression
 }
 
 // ExpressionStatement :
@@ -76,12 +78,6 @@ type InfixExpression struct {
 	Left     Expression
 	Operator string
 	Right    Expression
-}
-
-// Boolean :
-type Boolean struct {
-	Token token.Token
-	Value bool
 }
 
 // BlockStatement :
@@ -117,12 +113,6 @@ type CallExpression struct {
 	Token     token.Token
 	Function  Expression
 	Arguments []Expression
-}
-
-// StringLiteral :
-type StringLiteral struct {
-	Token token.Token
-	Value string
 }
 
 // statementNode :
@@ -189,27 +179,30 @@ func (vs *VarStatement) TokenLiteral() string {
 }
 
 // String :
-func (rs *ReturnStatement) String() string {
+func (cs *ConstStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(rs.TokenLiteral() + " ")
+	out.WriteString(cs.TokenLiteral() + " ")
+	out.WriteString(cs.Name.String())
+	out.WriteString(": ")
+	out.WriteString(cs.Type.Literal)
+	out.WriteString(" := ")
 
-	if nil != rs.ReturnValue {
-		out.WriteString(rs.ReturnValue.String())
+	if nil != cs.Value {
+		out.WriteString(cs.Value.String())
 	}
 
-	// Optional
-	// out.WriteString(";")
+	out.WriteString(";")
 
 	return out.String()
 }
 
 // statementNode :
-func (rs *ReturnStatement) statementNode() {}
+func (cs *ConstStatement) statementNode() {}
 
 // TokenLiteral :
-func (rs *ReturnStatement) TokenLiteral() string {
-	return rs.Token.Literal
+func (cs *ConstStatement) TokenLiteral() string {
+	return cs.Token.Literal
 }
 
 // String :
@@ -281,19 +274,6 @@ func (ie *InfixExpression) String() string {
 	out.WriteString(")")
 
 	return out.String()
-}
-
-// expressionNode :
-func (b *Boolean) expressionNode() {}
-
-// TokenLiteral :
-func (b *Boolean) TokenLiteral() string {
-	return b.Token.Literal
-}
-
-// String :
-func (b *Boolean) String() string {
-	return b.Token.Literal
 }
 
 // expressionNode :
@@ -391,17 +371,4 @@ func (ce *CallExpression) String() string {
 	out.WriteString(")")
 
 	return out.String()
-}
-
-// expressionNode :
-func (sl *StringLiteral) expressionNode() {}
-
-// TokenLiteral :
-func (sl *StringLiteral) TokenLiteral() string {
-	return sl.Token.Literal
-}
-
-// String :
-func (sl *StringLiteral) String() string {
-	return sl.Token.Literal
 }
