@@ -9,7 +9,7 @@ run:
 	@go run src/main.go
 
 docs:
-	@pandoc ./REPORT.md -t html5 -o report.pdf
+	@pandoc ./REPORT.md -t html5 -o REPORT.pdf
 
 zip:
 	@zip workclass.zip -r img src REPORT.pdf Makefile
