@@ -13,7 +13,7 @@ Este trabalho é uma continuação do _Trabalho Um - Analisador Léxico_, onde a
 
 ## YACC
 
-O tutorial apresentado em [referência](#refer%C3%AAncia) para um primeiro contato com o **YACC** utiliza o padrão _POSIX_, todavia após ver exemplos de códigos na internet de aborgagens diferentes foi decidido não seguir esse padrão devido há baixa flexibiliade dele. Além disso, mesmo se o padrão não fosse utilizado, como um dos membros do grupo estava implementando uma linguagem no seu tempo livre -- [TypeR](https://github.com/Fazendaaa/TypeR) --, foi decidido reaproveitar o código, apenas mudando a sintaxe para a da gramática do LALG.
+O tutorial apresentado em [referência](#refer%C3%AAncia) para um primeiro contato com o **YACC** utiliza o padrão _POSIX_, todavia após ver exemplos de códigos na internet de abordagens diferentes foi decidido não seguir esse padrão devido a baixa flexibiliade dele. Além disso, mesmo se o padrão não fosse utilizado, como um dos membros do grupo estava implementando uma linguagem no seu tempo livre -- [TypeR](https://github.com/Fazendaaa/TypeR) --, foi decidido reaproveitar o código, apenas mudando a sintaxe para a da gramática do LALG.
 
 # Utilização
 
@@ -33,7 +33,7 @@ ok  	_/path/LALG/src/ast
 ok  	_/path/LALG/src/parser
 ```
 
-Logo em seguida um "REPL" será iniciado para comandos serem digitados para serem analisádos:
+Logo em seguida um "REPL" será iniciado para comandos serem digitados para serem analisados:
 
 ```shell
 Hello USERNAME! This is LALG programming language!
@@ -42,7 +42,7 @@ To exit, just type Ctrl + C
 >> _
 ```
 
-Caso ocorra tudo sem maiores problemas, o própiro comando será retornado. Em alguns casos, em operações aninhadas, a operação em si será encapsulada em parentesis, mostrando a ordem que a árvore de sintaxe abstrata irá percorrer para verificar depois a expressão:
+Caso ocorra tudo sem maiores problemas, o próprio comando será retornado. Em alguns casos, em operações aninhadas, a operação em si será encapsulada em parentesis, mostrando a ordem que a árvore de sintaxe abstrata irá percorrer para verificar depois a expressão:
 
 ```shell
 >> var foo: integer := 1;
@@ -50,7 +50,7 @@ var foo: integer := 1;
 >> _
 ```
 
-E caso algum erro tenha acontecido, acontecerá um report inforando sobre ele:
+E caso algum erro tenha acontecido, acontecerá um report informando sobre ele:
 
 ```shell
 >> var bar := 2;
