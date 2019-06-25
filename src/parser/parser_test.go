@@ -684,7 +684,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 
 // TestConditionalIfOnlyExpressions :
 func TestConditionalIfOnlyExpressions(t *testing.T) {
-	input := `if (x < y) { x }`
+	input := `if x < y then x end`
 
 	l := lexer.InitializeLexer(input)
 	p := InitializeParser(l)
@@ -733,7 +733,7 @@ func TestConditionalIfOnlyExpressions(t *testing.T) {
 
 // TestConditionalIfElseExpressions :
 func TestConditionalIfElseExpressions(t *testing.T) {
-	input := `if (x < y) { x } else { y }`
+	input := `if x < y then x end else y end`
 
 	l := lexer.InitializeLexer(input)
 	p := InitializeParser(l)

@@ -393,20 +393,11 @@ func (p *Parser) parseConditionalExpression() ast.Expression {
 		Token: p.currentToken,
 	}
 
-	if !p.expectPeek(token.LEFT_PARENTHESIS) {
-		return nil
-	}
-
 	p.nextToken()
 
 	expression.Condition = p.parseExpression(LOWEST)
 
-	if !p.expectPeek(token.RIGHT_PARENTHESIS) {
-		return nil
-	}
-
-	// This might not be true in one statement blocks
-	if !p.expectPeek(token.BEGIN) {
+	if !p.expectPeek(token.THEN) {
 		return nil
 	}
 
@@ -414,10 +405,6 @@ func (p *Parser) parseConditionalExpression() ast.Expression {
 
 	if p.peekTokenIs(token.ELSE) {
 		p.nextToken()
-
-		if !p.expectPeek(token.BEGIN) {
-			return nil
-		}
 
 		expression.Alternative = p.parseBlockStatement()
 	}
