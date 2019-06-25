@@ -1,4 +1,4 @@
-all: tests run
+all: check tests run
 
 tests:
 	@go test ./src/lexer
@@ -12,4 +12,4 @@ docs:
 	@pandoc ./REPORT.md -t html5 -o report.pdf
 
 zip:
-	@zip workclass.zip -r img src REPORT.pdf
+	@zip workclass.zip -r img src REPORT.pdf Makefile
