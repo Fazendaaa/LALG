@@ -122,6 +122,12 @@ type ProgramLiteral struct {
 	Name  string
 }
 
+// WhileLiteral :
+type WhileLiteral struct {
+	Token     token.Token
+	Condition Expression
+}
+
 // statementNode :
 func (i *Identifier) statementNode() {}
 
@@ -406,4 +412,17 @@ func (pl *ProgramLiteral) TokenLiteral() string {
 // String :
 func (pl *ProgramLiteral) String() string {
 	return pl.TokenLiteral() + " " + pl.Name + ";"
+}
+
+// expressionNode :
+func (wl *WhileLiteral) expressionNode() {}
+
+// TokenLiteral :
+func (wl *WhileLiteral) TokenLiteral() string {
+	return wl.Token.Literal
+}
+
+// String :
+func (wl *WhileLiteral) String() string {
+	return wl.TokenLiteral() + " (" + wl.Condition.String() + ") do "
 }

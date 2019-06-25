@@ -505,6 +505,25 @@ func (p *Parser) parseProgramLiteral() ast.Expression {
 	return literal
 }
 
+// parseWhileLiteral :
+func (p *Parser) parseWhileLiteral() ast.Expression {
+	literal := &ast.WhileLiteral{
+		Token: p.currentToken,
+	}
+
+	if !p.expectPeek(token.LEFT_PARENTHESIS) {
+		return nil
+	}
+
+	literal.Condition = p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.DO) {
+		return nil
+	}
+
+	return literal
+}
+
 // parseCallArguments :
 func (p *Parser) parseCallArguments() []ast.Expression {
 	arguments := []ast.Expression{}
@@ -595,6 +614,7 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.IF, p.parseConditionalExpression)
 	p.registerPrefix(token.PROCEDURE, p.parseProcedureLiteral)
 	p.registerPrefix(token.PROGRAM, p.parseProgramLiteral)
+	p.registerPrefix(token.WHILE, p.parseWhileLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)

@@ -32,12 +32,14 @@ foo := 5;
 
 program main;
 {main example currently working}
-while x < 10 do
+while (x < 10) do
 	x := x + 1;
-end
 
 for y := 0 to 100 do
-	y := y + 1;
+	begin
+		y := y + 1;
+		y := y * 2;
+	end
 end
 `
 
@@ -131,9 +133,11 @@ end
 		{token.IDENTIFIER, "working"},
 		{token.RIGHT_BRACES, "}"},
 		{token.WHILE, "while"},
+		{token.LEFT_PARENTHESIS, "("},
 		{token.IDENTIFIER, "x"},
 		{token.LESS_THAN, "<"},
 		{token.INTEGER, "10"},
+		{token.RIGHT_PARENTHESIS, ")"},
 		{token.DO, "do"},
 		{token.IDENTIFIER, "x"},
 		{token.ASSIGN, ":="},
@@ -141,7 +145,6 @@ end
 		{token.PLUS, "+"},
 		{token.INTEGER, "1"},
 		{token.SEMICOLON, ";"},
-		{token.END, "end"},
 		{token.FOR, "for"},
 		{token.IDENTIFIER, "y"},
 		{token.ASSIGN, ":="},
@@ -149,12 +152,20 @@ end
 		{token.TO, "to"},
 		{token.INTEGER, "100"},
 		{token.DO, "do"},
+		{token.BEGIN, "begin"},
 		{token.IDENTIFIER, "y"},
 		{token.ASSIGN, ":="},
 		{token.IDENTIFIER, "y"},
 		{token.PLUS, "+"},
 		{token.INTEGER, "1"},
 		{token.SEMICOLON, ";"},
+		{token.IDENTIFIER, "y"},
+		{token.ASSIGN, ":="},
+		{token.IDENTIFIER, "y"},
+		{token.ASTERISK, "*"},
+		{token.INTEGER, "2"},
+		{token.SEMICOLON, ";"},
+		{token.END, "end"},
 		{token.END, "end"},
 		{token.EOF, ""},
 	}
