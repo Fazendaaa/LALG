@@ -1,4 +1,4 @@
-all: check tests run
+all: tests run
 
 tests:
 	@go test ./src/lexer
