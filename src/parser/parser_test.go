@@ -847,17 +847,17 @@ func TestProcedureParametersParsing(t *testing.T) {
 		expectedParameters []string
 	}{
 		{
-			input:              "procedure add() begin end",
+			input:              "procedure add(); begin end",
 			expectedParameters: []string{},
 		},
 		{
-			input: "procedure add(x: real) begin end",
+			input: "procedure add(x: real); begin end",
 			expectedParameters: []string{
 				"x",
 			},
 		},
 		{
-			input: "procedure add(x: real, y: real, z: real) begin end",
+			input: "procedure add(x: real, y: real, z: real); begin end",
 			expectedParameters: []string{
 				"x",
 				"y",
@@ -888,7 +888,7 @@ func TestProcedureParametersParsing(t *testing.T) {
 
 // TestCallExporessionParsing :
 func TestCallExporessionParsing(t *testing.T) {
-	input := "add(1, 2 * 3, 4 + 5)"
+	input := "add(1, 2 * 3, 4 + 5);"
 
 	l := lexer.InitializeLexer(input)
 	p := InitializeParser(l)
