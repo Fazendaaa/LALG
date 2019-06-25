@@ -302,7 +302,7 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 
 	p.nextToken()
 
-	for !p.currentTokenIs(token.RIGHT_BRACE) && !p.currentTokenIs(token.EOF) {
+	for !p.currentTokenIs(token.END) && !p.currentTokenIs(token.EOF) {
 		statement := p.parseStatement()
 
 		if nil != statement {
@@ -334,7 +334,7 @@ func (p *Parser) parseConditionalExpression() ast.Expression {
 	}
 
 	// This might not be true in one statement blocks
-	if !p.expectPeek(token.LEFT_BRACE) {
+	if !p.expectPeek(token.BEGIN) {
 		return nil
 	}
 
@@ -343,7 +343,7 @@ func (p *Parser) parseConditionalExpression() ast.Expression {
 	if p.peekTokenIs(token.ELSE) {
 		p.nextToken()
 
-		if !p.expectPeek(token.LEFT_BRACE) {
+		if !p.expectPeek(token.BEGIN) {
 			return nil
 		}
 
@@ -401,7 +401,7 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 
 	literal.Parameters = p.parseFunctionParameters()
 
-	if !p.expectPeek(token.LEFT_BRACE) {
+	if !p.expectPeek(token.BEGIN) {
 		return nil
 	}
 

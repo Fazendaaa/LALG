@@ -130,9 +130,9 @@ func (l *Lexer) NextToken() token.Token {
 	case ')':
 		tok = newToken(token.RIGHT_PARENTHESIS, l.char)
 	case '{':
-		tok = newToken(token.LEFT_BRACE, l.char)
+		tok = newToken(token.BEGIN, l.char)
 	case '}':
-		tok = newToken(token.RIGHT_BRACE, l.char)
+		tok = newToken(token.END, l.char)
 	case ',':
 		tok = newToken(token.COMMA, l.char)
 	case ';':

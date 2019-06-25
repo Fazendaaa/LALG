@@ -1,171 +1,93 @@
-# TypeR
+UNIVERSIDADE DE SÃO PAULO
 
-> A superset language implemented in Go that "types" the R language
+INSTITUTO DE CIÊNCIAS MATEMÁTICAS E DE COMPUTAÇÃO
 
-![TypeR logo](./logo/typer.png)
+DEPARTAMENTO DE CIÊNCIAS DE COMPUTAÇÃO
 
-## Introduction
+Prof. Dr. Diego Raphael Amancio
+diego@icmc.usp.br
 
-According to the language site itself, [R](https://www.r-project.org/) is:
+Trabalho 1 - Analisador léxico
 
-> R is a language and environment for statistical computing and graphics.
+> Especificação: desenvolver o analisador léxico para a linguagem LALG, com tratamento de erro. Como exemplo, considere as seguintes entradas e saídas:
 
-Because it is a scripting language, R seeks to allow flexibility in the development and prototyping of ideas. Through its weak typing system this can be a problem for applications in production -- it is worth noting that this is not a "problem" of language since it was meant to behave the way it is, but this same behavior may end becoming a difficulty to maintain a great code base in the language.
+[![first](./img/first.png)]()
 
-**TypeR** tries to be for R what [TypeScript](https://www.typescriptlang.org/) is for [JavaScript](https://www.javascript.com/), implementing a strong typing system that allows inference and statically typed -- the idea is to go beyond just being types and also to limit the language only to the functional paradigm, cleaning up a little of the multi paradigm of R.
+As seguintes tarefas devem ser desenvolvidas neste trabalho prático:
 
-At the end of the day the idea is to write a "functional and typed R code" which will then spit out a normal code in R after all the checks are done, avoiding possible errors when the code is running in production.
+1. Modelar a tarefa do analisador léxico: tokens possíveis, expressões regulares utilizadas, formas de tratamento de erros (ver slides das aulas).
 
-## How should it supposed to be?
+2. Buscar e estudar o lex/flex ou JavaCC: note que quase todos os livros de compiladores têm apresentações dessas ferramentas; também há muitos tutorias na Web (alguns estão disponíveis no site da disciplina). O grupo pode decidir por implementar o analisador de maneira manual, sem o uso das ferramentas mencionadas.
 
-A small example of how language it's supposed to be one day.
+3. Gerar o analisador léxico usando o lex/flex ou javaCC: o grupo deve incorporar no lex/flex/javaCC a geração de uma função principal que analise todo o arquivo de entrada, chamando o analisador léxico várias vezes, o qual, a cada chamada, deve retornar um único par <cadeia,token>. Note que esta função será substituída posteriormente pelo analisador sintático.
 
-**WARNING**: these are just ideas, they may be possible or not.
+Seguem mais alguns exemplos:
 
-### Functions
+[![second](./img/second.png)]()
 
-```
-add := Numeric a => a -> a -> a
-add := function(x, y) x + y
-```
+[![third](./img/third.png)]()
 
-The function header is similar to Haskell's -- read more at [functional approach](#Functional-approach) --; therefore, it also does not need to be declared, the language engine is able to infer the types of the parameters by the operations performed with them in the function body.
+O grupo deve tomar as seguintes decisões de projeto:
 
-```
-multiply := function(x, y) x * y
-# multiply := Numeric a => a -> a -> a
-```
+1. <palavra_reservada,palavra_reservada> ou <palavra_reservada,simb_palavra_reservada>. Para facilitar o entendimento, não utilize códigos numéricos para os tokens.
 
-#### Throw notation
+2. Implementação da tabela de palavras reservadas: escolha da estrutura de dados e da função de busca. Note que a busca deve ser eficiente.
 
-If a function throws an error or a warning, the caller has to know that without having to look at the implementation of the function itself.
+3. Como lidar com erros? Erros genéricos ou mais específicos?
 
-```
-isURLValid("www.google.com")
-# isURLValid := String -> Bool; throws error, warning
-```
+Entrega: submissão de arquivo zip/rar no Tidia (um membro do grupo deve submeter no escaninho) até o dia 28/4/2019.
 
-### Constants
+O que entregar? 
 
-```
-result := add(1, 2)
-# result is 3
+• Especificação/listagem do analisador léxico na linguagem lex/flex/javacc;
+• Código fonte produzido e executável;
+• Relatório sucinto informando os membros do grupo (número USP), decisões de projeto e justificativas, descrição da especificação do analisador léxico na linguagem lex/flex/javacc, passo a passo para compilar o analisador léxico e executá-lo além de um ou mais exemplos de execução.
 
-result := 4
-# This will throw a compiler error, because result is a constant
-```
+Prazo de entrega: 28/4/2019 até meia noite. A cada dia de atraso, um ponto a menos. Se cópia identificada, zero para todos os grupos envolvidos.
 
-If you want a "constant" to have its value changed, you must use the **let** keyword.
+Itens a serem avaliados: 
 
-```
-let result := add(1, 2)
-# result is 3
+10% da nota: Clareza e completude do relatório pedido, especificação criado em lex ...
+80% da nota: Análise léxica em si, com tratamento de erros. A avaliação será realizada com base em casos de teste.
+10% da nota: questões de implementação que incluem acesso à tabela de palavras reservadas, presença de programa principal executando o analisador léxico várias vezes, tratamento de comentários, etc.
 
-result := 4
-# result is 4
-```
+Dica: desenvolvam o trabalho com calma e atenção, aprimorando a especificação do lex.. e avaliando os impactos na análise léxica de casos reais.
 
-### Point free notation
+# Trabalho Prático 2 – Análise Sintática
 
-```
-square := function(x) x ^ 2
+> Especificação:  implementar  o  analisador  sintático  para  a  linguagem  LALG,  usando  YACC  ou JAVACC. A implementação também pode ser feita manualmente.
 
-addTwo := function(x) x + 2
+As seguintes tarefas devem ser desenvolvidas neste trabalho prático:
 
-result := addTwo . square 2
-# result is 6
-```
+1.  (Para  quem  não  implementar  manualmente)  Buscar  e  estudar  o  YACC  ou  JavaCC:  note  que quase todos os livros de compiladores têm apresentações dessas ferramentas; também há muitos tutorias na Web (alguns estão disponíveis no site da disciplina).
 
-### Prefix operations
+2.  Gerar  o  analisador  sintático  usando  o  YACC  ou  JavaCC:  substitua  o  programa  principal  do Trabalho 1 pelo analisador sintático. Corrija o analisador léxico (se necessário).
 
-```
-result := (+) 1 2
-# result is 3
-```
+3.  Implementar  o  tratamento  de  erro  usando  o  modo  pânico,  sempre  relatando  os  erros  para  o usuário.
 
-### Polymorphism
-> More on that later on
+Atenção:
 
-## Changes from R
+1.  A  usabilidade  da  interface  gráfica  ou  linha  de  comando  será  avaliada,  considerando  que  a interface seja intuitiva, simples e amigável.
 
-- Removing loops as **for**, **while**, **do ... while**;
-- ...
+2. A entrega será avaliada levando em consideração bons costumes de programação. Isto é:
+* Documentação do código
+* Variáveis e sub-rotinas com nomes significativos
+* Indentação
 
-## Why
+Entrega: submissão de arquivo no tidia (escaninho) até o dia 9/6/2019.
 
-The following topics try to clarify the choice of some design decisions.
+O que entregar?
+* Especificação do analisador sintático na linguagem yacc/javacc; 
+* Código fonte produzido e executável;
+* Relatório sucinto e objetivo informando os membros do grupo (número USP), decisões de projeto e de implementação, justificativas, visão geral dos módulos e organização do analisador sintático e   do   compilador   até   o   ponto   de   desenvolvimento   em   questão,   passo   a   passo   para compilar/interpretar o analisador sintático e executá-lo além de um ou mais exemplos de execução.
 
-### Go
+Prazo de entrega: 9/6/2019até antes da meia noite.
 
-As R alone is not a very performative language, Go was chosen to meet such need.
+A  cada  dia  de  atraso,  um  ponto  a  menos.  Se  cópia  identificada,  zero  para  todos  os  grupos envolvidos.
 
-> But why Go and not another language?
+Itens a serem avaliados:
+- 10% da nota: Clareza e completude do relatório pedido, especificação criado em YACC/JavaCC.
+- 80% da nota: Análise sintática em si, com tratamento de erros. A avaliação será realizada com base em casos de teste.
+- 10%  da  nota:  questões  de  implementação  que  incluem  presença  de  programa  principal executando o analisador sintático várias vezes, tratamento de comentários, etc.
 
-The answer is simple, Go is:
-
-- Easy to read and to write tests
-- Has a large community and documentation
-- Its concurrent design helps when writing a compiler
-- ...
-
-#### And why not use toolings to as Lex and YACC?
-
-As you can see the processing of language grammar was done without the aid of known tools -- such as [Flex](https://en.wikipedia.org/wiki/Flex_lexical_analyser) and [YACC](https://en.wikipedia.org/wiki/Yacc) -- but this was due to the examples given in the material used in the [reference](#Reference); as the idea of this project is, besides making a new language by itself, to aid the learning of compilers; this approach had a more didactic aspect involved in it.
-
-This is not to say that in a future version, either by flexibility or performance, the tools already mentioned will not be used.
-
-### Functional approach
-
-The choice of just following the functional paradigm is simply a personal decision, since the main use of R for the project author is for mathematical scenarios. Having a background in [Haskell](https://www.haskell.org/), this has greatly influenced prioritizing such a decision.
-
-Even if it does not have some of the practicalities of the functional paradigm like guards and pattern matching, it may be that if it is possible to emulate such designs they are added to the language.
-
-## TODO
-
-- Right now? Everything, nothing is current working
-- Tooling for TypeR:
-  - Create a linter/formatter package for the language so that more flexible patterns are placed and directed to the community to configure them in the way they think best
-  - Create a debuger tool
-  - Create a testing package
-  - Support to [VS Code](https://code.visualstudio.com/) in:
-    - Linter
-    - Debuger
-    - Testing
-  - **MAYBE** a docs package -- [ROxygen](https://klutometis.github.io/roxygen/) is too good to be ignored, that's why this idea is not really a priority
-  - Create code analyzer to perform duplicity analysis and other things just as [codeclimate](https://codeclimate.com/) already performs
-  - Write another package to transpile the TypeR code into [Julia](https://julialang.org/) code
-- Help out [Romain](https://community.rstudio.com/t/running-go-code-from-r/2340/3) write a Go to R integration package or even allow such integration into TypeR itself
-- Much more
-
-### Note
-
-It may take years and years for this project to be ready, but I intend to document each step and then release a series of books or blog posts in an easy and accessible way describing the process of implementing everything from the motive of language creation to the its outcome. This is rather a big project and the idea is that it brings good and great changes.
-
-## Author
-
-As the idea is to actually leave this repository just for discussions related to code already present: issues and pull requests, any other questions like project schedule or ask to add new features, you can talk to me about it at:
-
-- [Twitter](https://twitter.com/the_fznd)
-- [Telegram](https://t.me/farmy)
-
-## Reference
-
-### Books
-
-- [Writing An Interpreter In Go](https://interpreterbook.com/)
-- [Writing A Compiler In Go](https://compilerbook.com/)
-
-### Podcasts
-
-#### Hipsters
-
-- [Um Pouco de Compiladores](https://hipsters.tech/um-pouco-de-compiladores-hipsters-ponto-tech-105/)
-- [Linguagens Funcionais](https://hipsters.tech/linguagens-funcionais-hipsters-91/)
-- [Grandes Livros de Tecnologia](https://hipsters.tech/grandes-livros-de-tecnologia-hipsters-113/)
-
-### Videos
-
-- [Inkscape Tutorial: Abstract Galaxy Logo](https://youtu.be/AgbsozDUyTs)
-- [Lexical Scanning in Go - Rob Pike](https://youtu.be/HxaD_trXwRE)
-- [Sydney Golang Meetup - Rob Pike - Go 2 Draft Specifications](https://youtu.be/RIvL2ONhFBI)
-- [Why Go Is Successful (aka Simplicity is Complicated)](https://youtu.be/k9Zbuuo51go)
+Dica:   desenvolvam   o   trabalho   com   calma   e   atenção,   aprimorando   a   especificação   do YACC/JavaCC e avaliando os impactos na análise sintática de casos reais.

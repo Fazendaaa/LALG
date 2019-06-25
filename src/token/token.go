@@ -42,8 +42,8 @@ const (
 	SEMICOLON         = ";"
 	LEFT_PARENTHESIS  = "("
 	RIGHT_PARENTHESIS = ")"
-	LEFT_BRACE        = "{"
-	RIGHT_BRACE       = "}"
+	BEGIN             = "{"
+	END               = "}"
 
 	ASSIGN       = ":="
 	DOUBLE_EQUAL = "=="
