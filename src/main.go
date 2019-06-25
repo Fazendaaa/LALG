@@ -17,6 +17,7 @@ func main() {
 
 	fmt.Printf("Hello %s! This is LALG programming language!\n", user.Username)
 	fmt.Printf("Fell free to type in commands\n")
+	fmt.Printf("To exit, just type Ctrl + C\n")
 
 	repl.Start(os.Stdin, os.Stdout)
 }

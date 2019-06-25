@@ -321,16 +321,16 @@ func (ce *ConditionalExpression) TokenLiteral() string {
 func (ce *ConditionalExpression) String() string {
 	var out bytes.Buffer
 
-	out.WriteString("if")
+	out.WriteString("if ")
 	out.WriteString(ce.Condition.String())
 	out.WriteString(" ")
 	out.WriteString(ce.Consequence.String())
-	out.WriteString("end ")
+	out.WriteString(" end ")
 
 	if nil != ce.Alternative {
 		out.WriteString("else ")
 		out.WriteString(ce.Alternative.String())
-		out.WriteString("end ")
+		out.WriteString(" end ")
 	}
 
 	return out.String()
