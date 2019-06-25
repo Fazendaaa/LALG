@@ -33,6 +33,7 @@ type Program struct {
 // Identifier :
 type Identifier struct {
 	Token token.Token
+	Type  token.Token
 	Value string
 }
 
@@ -100,16 +101,10 @@ type ConditionalExpression struct {
 	Alternative *BlockStatement
 }
 
-// IdentifierTypes :
-type IdentifierTypes struct {
-	Token token.Token
-}
-
-// FunctionLiteral :
-type FunctionLiteral struct {
-	Token token.Token
-	// IdentifierTypes contains the parameters and return values types
-	Contract   []*IdentifierTypes
+// ProcedureLiteral :
+type ProcedureLiteral struct {
+	Token      token.Token
+	Name       string
 	Parameters []*Identifier
 	Body       *BlockStatement
 }
@@ -330,38 +325,40 @@ func (ce *ConditionalExpression) String() string {
 	out.WriteString(ce.Condition.String())
 	out.WriteString(" ")
 	out.WriteString(ce.Consequence.String())
+	out.WriteString("end ")
 
 	if nil != ce.Alternative {
 		out.WriteString("else ")
 		out.WriteString(ce.Alternative.String())
+		out.WriteString("end ")
 	}
 
 	return out.String()
 }
 
 // expressionNode :
-func (fl *FunctionLiteral) expressionNode() {}
+func (pl *ProcedureLiteral) expressionNode() {}
 
 // TokenLiteral :
-func (fl *FunctionLiteral) TokenLiteral() string {
-	return fl.Token.Literal
+func (pl *ProcedureLiteral) TokenLiteral() string {
+	return pl.Token.Literal
 }
 
 // String :
-func (fl *FunctionLiteral) String() string {
+func (pl *ProcedureLiteral) String() string {
 	var out bytes.Buffer
 
 	parameters := []string{}
 
-	for _, p := range fl.Parameters {
+	for _, p := range pl.Parameters {
 		parameters = append(parameters, p.String())
 	}
 
-	out.WriteString(fl.TokenLiteral())
-	out.WriteString("(")
+	out.WriteString(pl.TokenLiteral())
+	out.WriteString("begin")
 	out.WriteString(strings.Join(parameters, ", "))
-	out.WriteString(") ")
-	out.WriteString(fl.Body.String())
+	out.WriteString("end ")
+	out.WriteString(pl.Body.String())
 
 	return out.String()
 }

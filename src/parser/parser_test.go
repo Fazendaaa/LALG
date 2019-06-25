@@ -794,9 +794,9 @@ func TestConditionalIfElseExpressions(t *testing.T) {
 	}
 }
 
-// TestFunctionLiteral :
-func TestFunctionLiteral(t *testing.T) {
-	input := `function(x, y) { x + y; }`
+// TestProcedureLiteral :
+func TestProcedureLiteral(t *testing.T) {
+	input := `procedure add(x: integer, y: integer) begin x + y; end`
 
 	l := lexer.InitializeLexer(input)
 	p := InitializeParser(l)
@@ -814,10 +814,10 @@ func TestFunctionLiteral(t *testing.T) {
 		t.Fatalf("program.Statement[0] is not ast.ExpressionStatement, got=%T", program.Statements[0])
 	}
 
-	function, ok := statement.Expression.(*ast.FunctionLiteral)
+	function, ok := statement.Expression.(*ast.ProcedureLiteral)
 
 	if !ok {
-		t.Fatalf("statement.Expression is not ast.FunctionLiteral, got=%T", statement.Expression)
+		t.Fatalf("statement.Expression is not ast.ProcedureLiteral, got=%T", statement.Expression)
 	}
 
 	if 2 != len(function.Parameters) {
@@ -840,24 +840,24 @@ func TestFunctionLiteral(t *testing.T) {
 	testInfixExpression(t, bodyStatements.Expression, "x", "+", "y")
 }
 
-// TestFunctionParametersParsing :
-func TestFunctionParametersParsing(t *testing.T) {
+// TestProcedureParametersParsing :
+func TestProcedureParametersParsing(t *testing.T) {
 	tests := []struct {
 		input              string
 		expectedParameters []string
 	}{
 		{
-			input:              "function() {};",
+			input:              "procedure add() begin end",
 			expectedParameters: []string{},
 		},
 		{
-			input: "function(x) {};",
+			input: "procedure add(x: real) begin end",
 			expectedParameters: []string{
 				"x",
 			},
 		},
 		{
-			input: "function(x, y, z) {};",
+			input: "procedure add(x: real, y: real, z: real) begin end",
 			expectedParameters: []string{
 				"x",
 				"y",
@@ -874,7 +874,7 @@ func TestFunctionParametersParsing(t *testing.T) {
 		checkParserErrors(t, p)
 
 		statement := program.Statements[0].(*ast.ExpressionStatement)
-		function := statement.Expression.(*ast.FunctionLiteral)
+		function := statement.Expression.(*ast.ProcedureLiteral)
 
 		if len(function.Parameters) != len(tt.expectedParameters) {
 			t.Errorf("length parameters wrong, want %d, got=%d", len(function.Parameters), len(tt.expectedParameters))

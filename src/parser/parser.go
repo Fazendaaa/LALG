@@ -412,8 +412,30 @@ func (p *Parser) parseConditionalExpression() ast.Expression {
 	return expression
 }
 
-// parseFunctionParameters :
-func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+// parseParameter :
+func (p *Parser) parseParameter() *ast.Identifier {
+	p.nextToken()
+
+	identifier := &ast.Identifier{
+		Token: p.currentToken,
+		Value: p.currentToken.Literal,
+	}
+
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
+
+	p.nextToken()
+
+	identifier.Type = p.currentToken
+
+	p.nextToken()
+
+	return identifier
+}
+
+// parseProcedureParameters :
+func (p *Parser) parseProcedureParameters() []*ast.Identifier {
 	identifiers := []*ast.Identifier{}
 
 	if p.peekTokenIs(token.RIGHT_PARENTHESIS) {
@@ -422,43 +444,38 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 		return identifiers
 	}
 
-	p.nextToken()
-
-	identifier := &ast.Identifier{
-		Token: p.currentToken,
-		Value: p.currentToken.Literal,
-	}
+	identifier := p.parseParameter()
 	identifiers = append(identifiers, identifier)
 
-	for p.peekTokenIs(token.COMMA) {
-		p.nextToken()
-		p.nextToken()
-
-		identifier := &ast.Identifier{
-			Token: p.currentToken,
-			Value: p.currentToken.Literal,
-		}
+	for p.currentTokenIs(token.COMMA) {
+		identifier := p.parseParameter()
 		identifiers = append(identifiers, identifier)
 	}
 
-	if !p.expectPeek(token.RIGHT_PARENTHESIS) {
+	if !p.currentTokenIs(token.RIGHT_PARENTHESIS) {
 		return nil
 	}
 
 	return identifiers
 }
 
-// parseFunctionLiteral :
-func (p *Parser) parseFunctionLiteral() ast.Expression {
-	literal := &ast.FunctionLiteral{
+// parseProcedureLiteral :
+func (p *Parser) parseProcedureLiteral() ast.Expression {
+	literal := &ast.ProcedureLiteral{
 		Token: p.currentToken,
 	}
+
+	if !p.expectPeek(token.IDENTIFIER) {
+		return nil
+	}
+
+	literal.Name = p.currentToken.Literal
 
 	if !p.expectPeek(token.LEFT_PARENTHESIS) {
 		return nil
 	}
 
-	literal.Parameters = p.parseFunctionParameters()
+	literal.Parameters = p.parseProcedureParameters()
 
 	if !p.expectPeek(token.BEGIN) {
 		return nil
@@ -557,7 +574,7 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.LEFT_PARENTHESIS, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseConditionalExpression)
-	p.registerPrefix(token.PROCEDURE, p.parseFunctionLiteral)
+	p.registerPrefix(token.PROCEDURE, p.parseProcedureLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
