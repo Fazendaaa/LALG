@@ -25,12 +25,6 @@ type Expression interface {
 	expressionNode()
 }
 
-// Header :
-type Header interface {
-	Node
-	expressionNode()
-}
-
 // Program :
 type Program struct {
 	Statements []Statement
@@ -42,9 +36,10 @@ type Identifier struct {
 	Value string
 }
 
-// LetStatement :
-type LetStatement struct {
+// VarStatement :
+type VarStatement struct {
 	Token token.Token
+	Type  token.Token
 	Name  *Identifier
 	Value Expression
 }
@@ -105,8 +100,7 @@ type ConditionalExpression struct {
 
 // IdentifierTypes :
 type IdentifierTypes struct {
-	Token  token.Token
-	Header Header
+	Token token.Token
 }
 
 // FunctionLiteral :
@@ -168,29 +162,30 @@ func (p *Program) TokenLiteral() string {
 }
 
 // String :
-func (ls *LetStatement) String() string {
+func (vs *VarStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(ls.TokenLiteral() + " ")
-	out.WriteString(ls.Name.String())
+	out.WriteString(vs.TokenLiteral() + " ")
+	out.WriteString(vs.Name.String())
+	out.WriteString(": ")
+	out.WriteString(vs.Type.Literal)
 	out.WriteString(" := ")
 
-	if nil != ls.Value {
-		out.WriteString(ls.Value.String())
+	if nil != vs.Value {
+		out.WriteString(vs.Value.String())
 	}
 
-	// Optional
-	// out.WriteString(";")
+	out.WriteString(";")
 
 	return out.String()
 }
 
 // statementNode :
-func (ls *LetStatement) statementNode() {}
+func (vs *VarStatement) statementNode() {}
 
 // TokenLiteral :
-func (ls *LetStatement) TokenLiteral() string {
-	return ls.Token.Literal
+func (vs *VarStatement) TokenLiteral() string {
+	return vs.Token.Literal
 }
 
 // String :

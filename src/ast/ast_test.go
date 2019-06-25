@@ -10,7 +10,7 @@ import (
 func TestString(t *testing.T) {
 	program := &Program{
 		Statements: []Statement{
-			&LetStatement{
+			&VarStatement{
 				Token: token.Token{
 					Type:    token.VAR,
 					Literal: "var",
@@ -21,6 +21,10 @@ func TestString(t *testing.T) {
 						Literal: "myVar",
 					},
 					Value: "myVar",
+				},
+				Type: token.Token{
+					Type:    token.INTEGER_KEYWORD,
+					Literal: "integer",
 				},
 				Value: &Identifier{
 					Token: token.Token{
@@ -33,7 +37,7 @@ func TestString(t *testing.T) {
 		},
 	}
 
-	if "var myVar := anotherVar" != program.String() {
+	if "var myVar: integer := anotherVar;" != program.String() {
 		t.Errorf("program.String() wrong, got=%q", program.String())
 	}
 }

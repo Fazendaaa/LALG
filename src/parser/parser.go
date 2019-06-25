@@ -97,9 +97,9 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	return false
 }
 
-// parseLetStatement :
-func (p *Parser) parseLetStatement() *ast.LetStatement {
-	statement := &ast.LetStatement{
+// parseVarStatement :
+func (p *Parser) parseVarStatement() *ast.VarStatement {
+	statement := &ast.VarStatement{
 		Token: p.currentToken,
 	}
 
@@ -156,7 +156,7 @@ func (p *Parser) parseIdentifier() ast.Expression {
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.currentToken.Type {
 	case token.VAR:
-		return p.parseLetStatement()
+		return p.parseVarStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:
@@ -501,21 +501,17 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 	p.infixParserFunction = make(map[token.TokenType]infixParserFunction)
 
 	p.registerPrefix(token.IDENTIFIER, p.parseIdentifier)
-	p.registerPrefix(token.INT, p.parseIntegerLiteral)
-	p.registerPrefix(token.BANG, p.parsePrefixExpression)
+	p.registerPrefix(token.INTEGER, p.parseIntegerLiteral)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
-	p.registerPrefix(token.TRUE, p.parseBoolean)
-	p.registerPrefix(token.FALSE, p.parseBoolean)
 	p.registerPrefix(token.LEFT_PARENTHESIS, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseConditionalExpression)
 	p.registerPrefix(token.PROCEDURE, p.parseFunctionLiteral)
-	p.registerPrefix(token.STRING, p.parseStringLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
 	p.registerInfix(token.SLASH, p.parseInfixExpression)
 	p.registerInfix(token.ASTERISK, p.parseInfixExpression)
-	p.registerInfix(token.DOUBLE_EQUAL, p.parseInfixExpression)
+	p.registerInfix(token.EQUAL, p.parseInfixExpression)
 	p.registerInfix(token.DIFFERENT, p.parseInfixExpression)
 	p.registerInfix(token.LESS_THAN, p.parseInfixExpression)
 	p.registerInfix(token.GREATER_THAN, p.parseInfixExpression)

@@ -9,8 +9,8 @@ import (
 	"../lexer"
 )
 
-// testLetStatements :
-func testLetStatements(t *testing.T, s ast.Statement, name string) bool {
+// testVarStatements :
+func testVarStatements(t *testing.T, s ast.Statement, name string) bool {
 	if "var" != s.TokenLiteral() {
 		t.Errorf("s.TokenLiteral not 'var', got=%q", s.TokenLiteral())
 
@@ -178,25 +178,25 @@ func checkParserErrors(t *testing.T, p *Parser) {
 	t.FailNow()
 }
 
-// TestLetStatements :
-func TestLetStatements(t *testing.T) {
+// TestVarStatements :
+func TestVarStatements(t *testing.T) {
 	tests := []struct {
 		input              string
 		expectedIdentifier string
 		expectedValue      interface{}
 	}{
 		{
-			"var x := 5;",
+			"var x: integer := 5;",
 			"x",
 			5,
 		},
 		{
-			"var y:=10",
+			"var y: double :=10",
 			"y",
 			10,
 		},
 		{
-			"var foo := y",
+			"var foo: double := y",
 			"foo",
 			"y",
 		},
@@ -215,7 +215,7 @@ func TestLetStatements(t *testing.T) {
 
 		statement := program.Statements[0]
 
-		if !testLetStatements(t, statement, tt.expectedIdentifier) {
+		if !testVarStatements(t, statement, tt.expectedIdentifier) {
 			return
 		}
 
