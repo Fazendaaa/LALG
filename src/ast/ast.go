@@ -128,6 +128,13 @@ type WhileLiteral struct {
 	Condition Expression
 }
 
+// ForLiteral :
+type ForLiteral struct {
+	Token    token.Token
+	Variable string
+	Desired  string
+}
+
 // statementNode :
 func (i *Identifier) statementNode() {}
 
@@ -425,4 +432,17 @@ func (wl *WhileLiteral) TokenLiteral() string {
 // String :
 func (wl *WhileLiteral) String() string {
 	return wl.TokenLiteral() + " (" + wl.Condition.String() + ") do "
+}
+
+// expressionNode :
+func (fl *ForLiteral) expressionNode() {}
+
+// TokenLiteral :
+func (fl *ForLiteral) TokenLiteral() string {
+	return fl.Token.Literal
+}
+
+// String :
+func (fl *ForLiteral) String() string {
+	return fl.TokenLiteral() + " " + fl.Variable + " to " + fl.Desired + " do "
 }

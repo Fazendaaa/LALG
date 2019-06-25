@@ -986,3 +986,38 @@ func TestWhileLiteral(t *testing.T) {
 		t.Fatalf("expression.Condition.String() is not '%s', got=%s", "(a < 10)", expression.Condition.String())
 	}
 }
+
+// TestForLiteral :
+func TestForLiteral(t *testing.T) {
+	input := `for a to 10 do`
+
+	l := lexer.InitializeLexer(input)
+	p := InitializeParser(l)
+	program := p.ParseProgram()
+
+	checkParserErrors(t, p)
+
+	if 1 != len(program.Statements) {
+		t.Fatalf("program.Statements does not contain %d statements, got=%d", 1, len(program.Statements))
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("statement is not ExpressionStatement, got=%T", program.Statements[0])
+	}
+
+	expression, ok := statement.Expression.(*ast.ForLiteral)
+
+	if !ok {
+		t.Fatalf("statement.Expression is not ast.ForLiteral, got=%T", statement.Expression)
+	}
+
+	if "a" != expression.Variable {
+		t.Fatalf("expression.Variable is not '%s', got=%s", "a", expression.Variable)
+	}
+
+	if "10" != expression.Desired {
+		t.Fatalf("expression.Desired is not '%s', got=%s", "10", expression.Desired)
+	}
+}
