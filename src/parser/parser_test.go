@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"../ast"
@@ -116,6 +117,31 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	return true
 }
 
+// testRealLiteral :
+func testRealLiteral(t *testing.T, il ast.Expression, value float64) bool {
+	real, ok := il.(*ast.RealLiteral)
+
+	if !ok {
+		t.Errorf("il not *ast.RealLiteral, got=%T", il)
+
+		return false
+	}
+
+	if real.Value != value {
+		t.Errorf("real.Value not '%f', got=%f", value, real.Value)
+
+		return false
+	}
+
+	if real.TokenLiteral() != strconv.FormatFloat(value, 'f', -1, 64) {
+		t.Errorf("real.TokenLiteral() not '%f', got=%T", value, real.TokenLiteral())
+
+		return false
+	}
+
+	return true
+}
+
 // testLiteralExpresion :
 func testLiteralExpresion(t *testing.T, expression ast.Expression, expected interface{}) bool {
 	switch v := expected.(type) {
@@ -123,6 +149,8 @@ func testLiteralExpresion(t *testing.T, expression ast.Expression, expected inte
 		return testIntegerLiteral(t, expression, int64(v))
 	case int64:
 		return testIntegerLiteral(t, expression, v)
+	case float64:
+		return testRealLiteral(t, expression, v)
 	case string:
 		return testIdentifier(t, expression, v)
 	}
@@ -382,24 +410,14 @@ func TestParsingPrefixExpressions(t *testing.T) {
 		value    interface{}
 	}{
 		{
-			"!5;",
-			"!",
-			5,
-		},
-		{
 			"-15",
 			"-",
 			15,
 		},
 		{
-			"!TRUE",
-			"!",
-			true,
-		},
-		{
-			"!FALSE",
-			"!",
-			false,
+			"-15.5",
+			"-",
+			15.5,
 		},
 	}
 
