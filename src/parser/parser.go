@@ -551,6 +551,27 @@ func (p *Parser) parseForLiteral() ast.Expression {
 	return literal
 }
 
+// parseCommentLiteral :
+func (p *Parser) parseCommentLiteral() ast.Expression {
+	literal := &ast.CommentLiteral{
+		Token: p.currentToken,
+	}
+	comments := []string{}
+
+	p.nextToken()
+
+	for !p.currentTokenIs(token.RIGHT_BRACES) && !p.currentTokenIs(token.EOF) {
+		comments = append(comments, p.currentToken.Literal)
+		p.nextToken()
+	}
+
+	literal.Comments = comments
+
+	p.nextToken()
+
+	return literal
+}
+
 // parseCallArguments :
 func (p *Parser) parseCallArguments() []ast.Expression {
 	arguments := []ast.Expression{}
@@ -643,6 +664,7 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.PROGRAM, p.parseProgramLiteral)
 	p.registerPrefix(token.WHILE, p.parseWhileLiteral)
 	p.registerPrefix(token.FOR, p.parseForLiteral)
+	p.registerPrefix(token.LEFT_BRACES, p.parseCommentLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)

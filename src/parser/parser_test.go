@@ -1021,3 +1021,34 @@ func TestForLiteral(t *testing.T) {
 		t.Fatalf("expression.Desired is not '%s', got=%s", "10", expression.Desired)
 	}
 }
+
+// TestCommentLiteral :
+func TestCommentLiteral(t *testing.T) {
+	input := `{just a simple comment}`
+
+	l := lexer.InitializeLexer(input)
+	p := InitializeParser(l)
+	program := p.ParseProgram()
+
+	checkParserErrors(t, p)
+
+	if 1 != len(program.Statements) {
+		t.Fatalf("program.Statements does not contain %d statements, got=%d", 1, len(program.Statements))
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("statement is not ExpressionStatement, got=%T", program.Statements[0])
+	}
+
+	expression, ok := statement.Expression.(*ast.CommentLiteral)
+
+	if !ok {
+		t.Fatalf("statement.Expression is not ast.CommentLiteral, got=%T", statement.Expression)
+	}
+
+	if "{ just a simple comment }" != expression.String() {
+		t.Fatalf("expression.String() is not '%s', got=%s", "{ just a simple comment }", expression.String())
+	}
+}

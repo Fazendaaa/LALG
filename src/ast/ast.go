@@ -135,6 +135,12 @@ type ForLiteral struct {
 	Desired  string
 }
 
+// CommentLiteral :
+type CommentLiteral struct {
+	Token    token.Token
+	Comments []string
+}
+
 // statementNode :
 func (i *Identifier) statementNode() {}
 
@@ -445,4 +451,17 @@ func (fl *ForLiteral) TokenLiteral() string {
 // String :
 func (fl *ForLiteral) String() string {
 	return fl.TokenLiteral() + " " + fl.Variable + " to " + fl.Desired + " do "
+}
+
+// expressionNode :
+func (cl *CommentLiteral) expressionNode() {}
+
+// TokenLiteral :
+func (cl *CommentLiteral) TokenLiteral() string {
+	return cl.Token.Literal
+}
+
+// String :
+func (cl *CommentLiteral) String() string {
+	return "{ " + strings.Join(cl.Comments, " ") + " }"
 }
