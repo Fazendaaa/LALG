@@ -65,6 +65,12 @@ type IntegerLiteral struct {
 	Value int64
 }
 
+// RealLiteral :
+type RealLiteral struct {
+	Token token.Token
+	Value float64
+}
+
 // PrefixExpression :
 type PrefixExpression struct {
 	Token    token.Token
@@ -233,6 +239,19 @@ func (il *IntegerLiteral) TokenLiteral() string {
 // String :
 func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
+}
+
+// expressionNode :
+func (rl *RealLiteral) expressionNode() {}
+
+// TokenLiteral :
+func (rl *RealLiteral) TokenLiteral() string {
+	return rl.Token.Literal
+}
+
+// String :
+func (rl *RealLiteral) String() string {
+	return rl.Token.Literal
 }
 
 // expressionNode :

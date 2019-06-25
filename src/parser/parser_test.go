@@ -340,6 +340,40 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
+// TestRealLiteralExpression :
+func TestRealLiteralExpression(t *testing.T) {
+	input := "5.5;"
+
+	l := lexer.InitializeLexer(input)
+	p := InitializeParser(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if 1 != len(program.Statements) {
+		t.Fatalf("program has not enough statements, got=%d", len(program.Statements))
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("program.Statements[0] is not as.ExpressionStatement, got=%T", program.Statements[0])
+	}
+
+	literal, ok := statement.Expression.(*ast.RealLiteral)
+
+	if !ok {
+		t.Fatalf("expression not *ast.IntegralLiteral, got=%T", statement.Expression)
+	}
+
+	if 5.5 != literal.Value {
+		t.Errorf("literal.Value not '%b', got=%b", 5.5, literal.Value)
+	}
+
+	if "5.5" != literal.TokenLiteral() {
+		t.Errorf("literal.TokenLiteral not '%s', got=%s", "5.5", literal.TokenLiteral())
+	}
+}
+
 // TestParsingPrefixExpressions :
 func TestParsingPrefixExpressions(t *testing.T) {
 	prefixTests := []struct {

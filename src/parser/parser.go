@@ -271,6 +271,26 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	return literal
 }
 
+// parseRealLiteral :
+func (p *Parser) parseRealLiteral() ast.Expression {
+	literal := &ast.RealLiteral{
+		Token: p.currentToken,
+	}
+
+	value, err := strconv.ParseFloat(p.currentToken.Literal, 64)
+
+	if nil != err {
+		message := fmt.Sprintf("could not parse '%q' as real", p.currentToken.Literal)
+		p.errors = append(p.errors, message)
+
+		return nil
+	}
+
+	literal.Value = value
+
+	return literal
+}
+
 // noPrefixParserFnError :
 func (p *Parser) noPrefixParserFnError(t token.TokenType) {
 	message := fmt.Sprintf("no prefix parse function for '%s' was found", t)
@@ -546,6 +566,7 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 
 	p.registerPrefix(token.IDENTIFIER, p.parseIdentifier)
 	p.registerPrefix(token.INTEGER, p.parseIntegerLiteral)
+	p.registerPrefix(token.REAL, p.parseRealLiteral)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.LEFT_PARENTHESIS, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseConditionalExpression)
