@@ -26,13 +26,13 @@ A small example of how language it's supposed to be one day.
 
 ```
 add := Numeric a => a -> a -> a
-add <- function(x, y) x + y
+add := function(x, y) x + y
 ```
 
 The function header is similar to Haskell's -- read more at [functional approach](#Functional-approach) --; therefore, it also does not need to be declared, the language engine is able to infer the types of the parameters by the operations performed with them in the function body.
 
 ```
-multiply <- function(x, y) x * y
+multiply := function(x, y) x * y
 # multiply := Numeric a => a -> a -> a
 ```
 
@@ -48,38 +48,38 @@ isURLValid("www.google.com")
 ### Constants
 
 ```
-result <- add(1, 2)
+result := add(1, 2)
 # result is 3
 
-result <- 4
+result := 4
 # This will throw a compiler error, because result is a constant
 ```
 
 If you want a "constant" to have its value changed, you must use the **let** keyword.
 
 ```
-let result <- add(1, 2)
+let result := add(1, 2)
 # result is 3
 
-result <- 4
+result := 4
 # result is 4
 ```
 
 ### Point free notation
 
 ```
-square <- function(x) x ^ 2
+square := function(x) x ^ 2
 
-addTwo <- function(x) x + 2
+addTwo := function(x) x + 2
 
-result <- addTwo . square 2
+result := addTwo . square 2
 # result is 6
 ```
 
 ### Prefix operations
 
 ```
-result <- (+) 1 2
+result := (+) 1 2
 # result is 3
 ```
 

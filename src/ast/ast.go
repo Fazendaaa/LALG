@@ -173,7 +173,7 @@ func (ls *LetStatement) String() string {
 
 	out.WriteString(ls.TokenLiteral() + " ")
 	out.WriteString(ls.Name.String())
-	out.WriteString(" <- ")
+	out.WriteString(" := ")
 
 	if nil != ls.Value {
 		out.WriteString(ls.Value.String())

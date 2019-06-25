@@ -140,13 +140,13 @@ func (l *Lexer) NextToken() token.Token {
 	case '>':
 		tok = newToken(token.GREATER_THAN, l.char)
 	case '<':
-		if l.peekChar() == '-' {
-			tok = newPeekedToken(l, token.ASSIGN)
-		} else if l.peekChar() == '=' {
+		if l.peekChar() == '=' {
 			tok = newPeekedToken(l, token.LESS_THAN_EQUAL)
 		} else {
 			tok = newToken(token.LESS_THAN, l.char)
 		}
+	case ':':
+		tok = newPeekedToken(l, token.ASSIGN)
 	case '=':
 		if l.peekChar() == '=' {
 			tok = newPeekedToken(l, token.DOUBLE_EQUAL)

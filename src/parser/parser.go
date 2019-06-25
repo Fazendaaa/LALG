@@ -155,7 +155,7 @@ func (p *Parser) parseIdentifier() ast.Expression {
 // parseStatement :
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.currentToken.Type {
-	case token.LET:
+	case token.VAR:
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()

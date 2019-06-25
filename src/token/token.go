@@ -19,7 +19,7 @@ const (
 	UNKNOWN    = "UNKNOWN"
 	IDENTIFIER = "IDENTIFIER"
 
-	LET      = "LET"
+	VAR      = "VAR"
 	FUNCTION = "FUNCTION"
 	TRUE     = "TRUE"
 	FALSE    = "FALSE"
@@ -45,19 +45,19 @@ const (
 	LEFT_BRACE        = "{"
 	RIGHT_BRACE       = "}"
 
-	ASSIGN       = "<-"
+	ASSIGN       = ":="
 	DOUBLE_EQUAL = "=="
 	DIFFERENT    = "!="
 )
 
 var keywords = map[string]TokenType{
 	"if":       IF,
-	"let":      LET,
+	"var":      VAR,
 	"TRUE":     TRUE,
 	"else":     ELSE,
 	"FALSE":    FALSE,
 	"return":   RETURN,
-	"<-":       ASSIGN,
+	":=":       ASSIGN,
 	"function": FUNCTION,
 	"<":        LESS_THAN,
 	"<=":       LESS_THAN_EQUAL,

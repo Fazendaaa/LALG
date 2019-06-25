@@ -12,8 +12,8 @@ func TestString(t *testing.T) {
 		Statements: []Statement{
 			&LetStatement{
 				Token: token.Token{
-					Type:    token.LET,
-					Literal: "let",
+					Type:    token.VAR,
+					Literal: "var",
 				},
 				Name: &Identifier{
 					Token: token.Token{
@@ -33,7 +33,7 @@ func TestString(t *testing.T) {
 		},
 	}
 
-	if "let myVar <- anotherVar" != program.String() {
+	if "var myVar := anotherVar" != program.String() {
 		t.Errorf("program.String() wrong, got=%q", program.String())
 	}
 }

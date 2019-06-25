@@ -446,19 +446,19 @@ func TestLetStatements(t *testing.T) {
 		expected int64
 	}{
 		{
-			"let a <- 5; a;",
+			"var a := 5; a;",
 			5,
 		},
 		{
-			"let a <- 5 * 5; a",
+			"var a := 5 * 5; a",
 			25,
 		},
 		{
-			"let a <- 5; let b <- a; b;",
+			"var a := 5; var b := a; b;",
 			5,
 		},
 		{
-			"let a <- 5; let b <- a; let c <- a + b + 5; c",
+			"var a := 5; var b := a; var c := a + b + 5; c",
 			15,
 		},
 	}
@@ -499,23 +499,23 @@ func TestFunctionApplication(t *testing.T) {
 		expected int64
 	}{
 		{
-			"let identity <- function(x) { x; }; identity(5);",
+			"var identity := function(x) { x; }; identity(5);",
 			5,
 		},
 		{
-			"let identity <- function(x) { return x; }; identity(5);",
+			"var identity := function(x) { return x; }; identity(5);",
 			5,
 		},
 		{
-			"let double <- function(x) { x * 2; }; double(5)",
+			"var double := function(x) { x * 2; }; double(5)",
 			10,
 		},
 		{
-			"let add <- function(x, y) { x + y }; add(5, 5)",
+			"var add := function(x, y) { x + y }; add(5, 5)",
 			10,
 		},
 		{
-			"let add <- function(x, y) { x + y }; add(5 + 5, add(5, 5))",
+			"var add := function(x, y) { x + y }; add(5 + 5, add(5, 5))",
 			20,
 		},
 		{
@@ -532,11 +532,11 @@ func TestFunctionApplication(t *testing.T) {
 // TestClosures :
 func TestClosures(t *testing.T) {
 	input := `
-	let newAdder <- function(x) {
+	var newAdder := function(x) {
 		function(y) { x + y };
 	};
 
-	let addTwo <- newAdder(2)
+	var addTwo := newAdder(2)
 	addTwo(2)
 	`
 

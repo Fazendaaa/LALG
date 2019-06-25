@@ -8,11 +8,11 @@ import (
 
 // TestNextToken :
 func TestNextToken(t *testing.T) {
-	input := `five <- 5;ten <- 10
+	input := `five := 5;ten := 10
 
-add <- function(x, y) x + y
+add := function(x, y) x + y
 
-result <- add(five, ten)
+result := add(five, ten)
 !-/*5;
 5 < 10 > 5;
 
@@ -25,8 +25,8 @@ if (5 <= 10) {
 10 == 10;
 10 != 9
 
-let foo <- 10
-foo <- 5
+var foo := 10
+foo := 5
 "foo"
 "bar"
 "foo bar"
@@ -37,14 +37,14 @@ foo <- 5
 		expectedLiteral string
 	}{
 		{token.IDENTIFIER, "five"},
-		{token.ASSIGN, "<-"},
+		{token.ASSIGN, ":="},
 		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 		{token.IDENTIFIER, "ten"},
-		{token.ASSIGN, "<-"},
+		{token.ASSIGN, ":="},
 		{token.INT, "10"},
 		{token.IDENTIFIER, "add"},
-		{token.ASSIGN, "<-"},
+		{token.ASSIGN, ":="},
 		{token.FUNCTION, "function"},
 		{token.LEFT_PARENTHESIS, "("},
 		{token.IDENTIFIER, "x"},
@@ -55,7 +55,7 @@ foo <- 5
 		{token.PLUS, "+"},
 		{token.IDENTIFIER, "y"},
 		{token.IDENTIFIER, "result"},
-		{token.ASSIGN, "<-"},
+		{token.ASSIGN, ":="},
 		{token.IDENTIFIER, "add"},
 		{token.LEFT_PARENTHESIS, "("},
 		{token.IDENTIFIER, "five"},
@@ -97,12 +97,12 @@ foo <- 5
 		{token.INT, "10"},
 		{token.DIFFERENT, "!="},
 		{token.INT, "9"},
-		{token.LET, "let"},
+		{token.VAR, "var"},
 		{token.IDENTIFIER, "foo"},
-		{token.ASSIGN, "<-"},
+		{token.ASSIGN, ":="},
 		{token.INT, "10"},
 		{token.IDENTIFIER, "foo"},
-		{token.ASSIGN, "<-"},
+		{token.ASSIGN, ":="},
 		{token.INT, "5"},
 		{token.STRING, "foo"},
 		{token.STRING, "bar"},
@@ -116,7 +116,7 @@ foo <- 5
 		tok := l.NextToken()
 
 		if tok.Type != tt.expectedType {
-			t.Fatalf("tests[%d] - tokentype wrong\n\texpected=%q, got=%q", i, tt.expectedLiteral, tok.Type)
+			t.Fatalf("tests[%d] - token type wrong\n\texpected=%q, got=%q", i, tt.expectedLiteral, tok.Type)
 		}
 
 		if tok.Literal != tt.expectedLiteral {

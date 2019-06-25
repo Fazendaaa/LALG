@@ -11,26 +11,26 @@ import (
 
 // testLetStatements :
 func testLetStatements(t *testing.T, s ast.Statement, name string) bool {
-	if "let" != s.TokenLiteral() {
-		t.Errorf("s.TokenLiteral not 'let', got=%q", s.TokenLiteral())
+	if "var" != s.TokenLiteral() {
+		t.Errorf("s.TokenLiteral not 'var', got=%q", s.TokenLiteral())
 
 		return false
 	}
 
-	letStatement, ok := s.(*ast.LetStatement)
+	varStatement, ok := s.(*ast.LetStatement)
 
 	if !ok {
 		t.Errorf("s not *ast.LetStatement, got=%T", s)
 
 		return false
 	}
-	if letStatement.Name.Value != name {
-		t.Errorf("letStatement.Name.Value not '%s', got=%s", name, letStatement.Name.Value)
+	if varStatement.Name.Value != name {
+		t.Errorf("varStatement.Name.Value not '%s', got=%s", name, varStatement.Name.Value)
 
 		return false
 	}
-	if letStatement.Name.TokenLiteral() != name {
-		t.Errorf("lestStatement.Name.TokenLiteral() not '%s', got=%s", name, letStatement.Name.TokenLiteral())
+	if varStatement.Name.TokenLiteral() != name {
+		t.Errorf("lestStatement.Name.TokenLiteral() not '%s', got=%s", name, varStatement.Name.TokenLiteral())
 
 		return false
 	}
@@ -186,17 +186,17 @@ func TestLetStatements(t *testing.T) {
 		expectedValue      interface{}
 	}{
 		{
-			"let x <- 5;",
+			"var x := 5;",
 			"x",
 			5,
 		},
 		{
-			"let y<-10",
+			"var y:=10",
 			"y",
 			10,
 		},
 		{
-			"let foo <- y",
+			"var foo := y",
 			"foo",
 			"y",
 		},
