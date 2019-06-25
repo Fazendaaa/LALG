@@ -477,6 +477,10 @@ func (p *Parser) parseProcedureLiteral() ast.Expression {
 
 	literal.Parameters = p.parseProcedureParameters()
 
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
+	}
+
 	if !p.expectPeek(token.BEGIN) {
 		return nil
 	}

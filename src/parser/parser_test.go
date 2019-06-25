@@ -796,7 +796,7 @@ func TestConditionalIfElseExpressions(t *testing.T) {
 
 // TestProcedureLiteral :
 func TestProcedureLiteral(t *testing.T) {
-	input := `procedure add(x: integer, y: integer) begin x + y; end`
+	input := `procedure add(x: integer, y: integer); begin x + y; end`
 
 	l := lexer.InitializeLexer(input)
 	p := InitializeParser(l)
