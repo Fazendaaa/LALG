@@ -116,6 +116,12 @@ type CallExpression struct {
 	Arguments []Expression
 }
 
+// ProgramLiteral :
+type ProgramLiteral struct {
+	Token token.Token
+	Name  string
+}
+
 // statementNode :
 func (i *Identifier) statementNode() {}
 
@@ -387,4 +393,17 @@ func (ce *CallExpression) String() string {
 	out.WriteString(")")
 
 	return out.String()
+}
+
+// expressionNode :
+func (pl *ProgramLiteral) expressionNode() {}
+
+// TokenLiteral :
+func (pl *ProgramLiteral) TokenLiteral() string {
+	return pl.Token.Literal
+}
+
+// String :
+func (pl *ProgramLiteral) String() string {
+	return pl.TokenLiteral() + " " + pl.Name + ";"
 }

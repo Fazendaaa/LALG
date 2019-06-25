@@ -19,14 +19,19 @@ const (
 	REAL_KEYWORD    = "REAL_KEYWORD"
 	INTEGER_KEYWORD = "INTEGER_KEYWORD"
 
+	IDENTIFIER = "IDENTIFIER"
 	INTEGER    = "INTEGER"
 	REAL       = "REAL"
-	IDENTIFIER = "IDENTIFIER"
 
-	FOR       = "FOR"
+	PROGRAM   = "PROGRAM"
 	PROCEDURE = "PROCEDURE"
 	BEGIN     = "BEGIN"
+	DO        = "DO"
 	END       = "END"
+
+	FOR   = "FOR"
+	TO    = "TO"
+	WHILE = "WHILE"
 
 	IF   = "IF"
 	THEN = "THEN"
@@ -56,6 +61,8 @@ const (
 
 var keywords = map[string]TokenType{
 	"if":        IF,
+	"do":        DO,
+	"to":        TO,
 	"var":       VAR,
 	"for":       FOR,
 	"end":       END,
@@ -63,12 +70,14 @@ var keywords = map[string]TokenType{
 	"then":      THEN,
 	"+":         PLUS,
 	"const":     CONST,
+	"while":     WHILE,
 	"begin":     BEGIN,
 	"==":        EQUAL,
 	":":         COLON,
 	"-":         MINUS,
 	"/":         SLASH,
 	":=":        ASSIGN,
+	"program":   PROGRAM,
 	"*":         ASTERISK,
 	"procedure": PROCEDURE,
 	"<":         LESS_THAN,

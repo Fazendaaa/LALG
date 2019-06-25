@@ -27,8 +27,18 @@ else
 
 {just a comment}
 
-var foo: integer := 10
-foo := 5
+var foo: integer := 10;
+foo := 5;
+
+program main;
+{main example currently working}
+while x < 10 do
+	x := x + 1;
+end
+
+for y := 0 to 100 do
+	y := y + 1;
+end
 `
 
 	test := []struct {
@@ -106,9 +116,46 @@ foo := 5
 		{token.INTEGER_KEYWORD, "integer"},
 		{token.ASSIGN, ":="},
 		{token.INTEGER, "10"},
+		{token.SEMICOLON, ";"},
 		{token.IDENTIFIER, "foo"},
 		{token.ASSIGN, ":="},
 		{token.INTEGER, "5"},
+		{token.SEMICOLON, ";"},
+		{token.PROGRAM, "program"},
+		{token.IDENTIFIER, "main"},
+		{token.SEMICOLON, ";"},
+		{token.LEFT_BRACES, "{"},
+		{token.IDENTIFIER, "main"},
+		{token.IDENTIFIER, "example"},
+		{token.IDENTIFIER, "currently"},
+		{token.IDENTIFIER, "working"},
+		{token.RIGHT_BRACES, "}"},
+		{token.WHILE, "while"},
+		{token.IDENTIFIER, "x"},
+		{token.LESS_THAN, "<"},
+		{token.INTEGER, "10"},
+		{token.DO, "do"},
+		{token.IDENTIFIER, "x"},
+		{token.ASSIGN, ":="},
+		{token.IDENTIFIER, "x"},
+		{token.PLUS, "+"},
+		{token.INTEGER, "1"},
+		{token.SEMICOLON, ";"},
+		{token.END, "end"},
+		{token.FOR, "for"},
+		{token.IDENTIFIER, "y"},
+		{token.ASSIGN, ":="},
+		{token.INTEGER, "0"},
+		{token.TO, "to"},
+		{token.INTEGER, "100"},
+		{token.DO, "do"},
+		{token.IDENTIFIER, "y"},
+		{token.ASSIGN, ":="},
+		{token.IDENTIFIER, "y"},
+		{token.PLUS, "+"},
+		{token.INTEGER, "1"},
+		{token.SEMICOLON, ";"},
+		{token.END, "end"},
 		{token.EOF, ""},
 	}
 

@@ -924,3 +924,34 @@ func TestCallExporessionParsing(t *testing.T) {
 	testInfixExpression(t, expression.Arguments[1], 2, "*", 3)
 	testInfixExpression(t, expression.Arguments[2], 4, "+", 5)
 }
+
+// TestProgramParsing
+func TestProgramLiteralParsing(t *testing.T) {
+	input := `program main;`
+
+	l := lexer.InitializeLexer(input)
+	p := InitializeParser(l)
+	program := p.ParseProgram()
+
+	checkParserErrors(t, p)
+
+	if 1 != len(program.Statements) {
+		t.Fatalf("program.Statements does not contain %d statements, got=%d", 1, len(program.Statements))
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("statement is not ExpressionStatement, got=%T", program.Statements[0])
+	}
+
+	expression, ok := statement.Expression.(*ast.ProgramLiteral)
+
+	if !ok {
+		t.Fatalf("statement.Expression is not ast.ProgramLiteral, got=%T", statement.Expression)
+	}
+
+	if "main" != expression.Name {
+		t.Fatalf("Wrong program name, expected was=%s, got=%s", "main", expression.Name)
+	}
+}

@@ -486,6 +486,25 @@ func (p *Parser) parseProcedureLiteral() ast.Expression {
 	return literal
 }
 
+// parseProgramLiteral :
+func (p *Parser) parseProgramLiteral() ast.Expression {
+	literal := &ast.ProgramLiteral{
+		Token: p.currentToken,
+	}
+
+	if !p.expectPeek(token.IDENTIFIER) {
+		return nil
+	}
+
+	literal.Name = p.currentToken.Literal
+
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
+	}
+
+	return literal
+}
+
 // parseCallArguments :
 func (p *Parser) parseCallArguments() []ast.Expression {
 	arguments := []ast.Expression{}
@@ -575,6 +594,7 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LEFT_PARENTHESIS, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseConditionalExpression)
 	p.registerPrefix(token.PROCEDURE, p.parseProcedureLiteral)
+	p.registerPrefix(token.PROGRAM, p.parseProgramLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
