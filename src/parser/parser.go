@@ -21,7 +21,7 @@ const (
 )
 
 var precedences = map[token.TokenType]int{
-	token.DOUBLE_EQUAL:     EQUALS,
+	token.EQUAL:            EQUALS,
 	token.DIFFERENT:        EQUALS,
 	token.LESS_THAN:        LESSGREATER,
 	token.GREATER_THAN:     LESSGREATER,
@@ -97,6 +97,60 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	return false
 }
 
+// expectType :
+func (p *Parser) expectType() token.Token {
+	if p.peekTokenIs(token.INTEGER_KEYWORD) {
+		p.nextToken()
+
+		return token.Token{
+			Type:    "INTEGER_KEYWORD",
+			Literal: "integer",
+		}
+	}
+	if p.peekTokenIs(token.REAL_KEYWORD) {
+		p.nextToken()
+
+		return token.Token{
+			Type:    "REAL_KEYWORD",
+			Literal: "real",
+		}
+	}
+
+	p.nextToken()
+
+	return token.Token{
+		Type:    "ILLEGAL",
+		Literal: "",
+	}
+}
+
+// parseExpression :
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParserFunction[p.currentToken.Type]
+
+	if nil == prefix {
+		p.noPrefixParserFnError(p.currentToken.Type)
+
+		return nil
+	}
+
+	leftExpression := prefix()
+
+	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
+		infix := p.infixParserFunction[p.peekToken.Type]
+
+		if nil == infix {
+			return leftExpression
+		}
+
+		p.nextToken()
+
+		leftExpression = infix(leftExpression)
+	}
+
+	return leftExpression
+}
+
 // parseVarStatement :
 func (p *Parser) parseVarStatement() *ast.VarStatement {
 	statement := &ast.VarStatement{
@@ -112,6 +166,16 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 		Value: p.currentToken.Literal,
 	}
 
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
+
+	statement.Type = p.expectType()
+
+	if "ILLEGAL" == statement.Type.Type {
+		return nil
+	}
+
 	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}
@@ -120,25 +184,8 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 
 	statement.Value = p.parseExpression(LOWEST)
 
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
-	}
-
-	return statement
-}
-
-// parseReturnStatement :
-func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
-	statement := &ast.ReturnStatement{
-		Token: p.currentToken,
-	}
-
-	p.nextToken()
-
-	statement.ReturnValue = p.parseExpression(LOWEST)
-
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
 	}
 
 	return statement
@@ -157,8 +204,6 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.currentToken.Type {
 	case token.VAR:
 		return p.parseVarStatement()
-	case token.RETURN:
-		return p.parseReturnStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
@@ -188,33 +233,6 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 func (p *Parser) noPrefixParserFnError(t token.TokenType) {
 	message := fmt.Sprintf("no prefix parse function for '%s' was found", t)
 	p.errors = append(p.errors, message)
-}
-
-// parseExpression :
-func (p *Parser) parseExpression(precedence int) ast.Expression {
-	prefix := p.prefixParserFunction[p.currentToken.Type]
-
-	if nil == prefix {
-		p.noPrefixParserFnError(p.currentToken.Type)
-
-		return nil
-	}
-
-	leftExpression := prefix()
-
-	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
-		infix := p.infixParserFunction[p.peekToken.Type]
-
-		if nil == infix {
-			return leftExpression
-		}
-
-		p.nextToken()
-
-		leftExpression = infix(leftExpression)
-	}
-
-	return leftExpression
 }
 
 // parseExpressionStatement :
@@ -270,14 +288,6 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression.Right = p.parseExpression(precedence)
 
 	return expression
-}
-
-// parseBoolean :
-func (p *Parser) parseBoolean() ast.Expression {
-	return &ast.Boolean{
-		Token: p.currentToken,
-		Value: p.currentTokenIs(token.TRUE),
-	}
 }
 
 // parseGroupedExpression :
