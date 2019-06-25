@@ -15,7 +15,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Hello %s! This is TypeR programming language!\n", user.Username)
+	fmt.Printf("Hello %s! This is LALG programming language!\n", user.Username)
 	fmt.Printf("Fell free to type in commands\n")
 
 	repl.Start(os.Stdin, os.Stdout)

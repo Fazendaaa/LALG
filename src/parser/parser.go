@@ -508,7 +508,7 @@ func InitializeParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.FALSE, p.parseBoolean)
 	p.registerPrefix(token.LEFT_PARENTHESIS, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseConditionalExpression)
-	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.PROCEDURE, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)

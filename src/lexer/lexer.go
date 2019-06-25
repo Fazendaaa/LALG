@@ -17,7 +17,7 @@ type Lexer struct {
 
 // isLetter : maybe PLUS '?' and '!' as valid also in a near future -- R doesn't allow it
 func isLetter(char byte) bool {
-	return ('a' <= char && char <= 'z') || ('A' <= char && char <= 'Z') || char == '_'
+	return (('a' <= char && char <= 'z') || ('A' <= char && char <= 'Z') || char == '_') && char != ':'
 }
 
 // isDigit :
@@ -62,11 +62,6 @@ func (l *Lexer) readIdentifier() string {
 	return readIt(l, isLetter)
 }
 
-// readNumber :
-func (l *Lexer) readNumber() string {
-	return readIt(l, isDigit)
-}
-
 // readString :
 func (l *Lexer) readString() string {
 	postion := l.position + 1
@@ -87,6 +82,39 @@ func newToken(tokenType token.TokenType, char byte) token.Token {
 	return token.Token{
 		Type:    tokenType,
 		Literal: string(char),
+	}
+}
+
+// readNumber :
+func (l *Lexer) readNumber() token.Token {
+	var isReal bool
+	position := l.position
+
+	for isDigit(l.char) {
+		l.readChar()
+	}
+
+	if '.' == l.char {
+		isReal = true
+		l.readChar()
+
+		for isDigit(l.char) {
+			l.readChar()
+		}
+	}
+
+	number := l.input[position:l.position]
+
+	if isReal {
+		return token.Token{
+			Type:    token.REAL,
+			Literal: number,
+		}
+	}
+
+	return token.Token{
+		Type:    token.INTEGER,
+		Literal: number,
 	}
 }
 
@@ -130,9 +158,9 @@ func (l *Lexer) NextToken() token.Token {
 	case ')':
 		tok = newToken(token.RIGHT_PARENTHESIS, l.char)
 	case '{':
-		tok = newToken(token.BEGIN, l.char)
+		tok = newToken(token.LEFT_BRACES, l.char)
 	case '}':
-		tok = newToken(token.END, l.char)
+		tok = newToken(token.RIGHT_BRACES, l.char)
 	case ',':
 		tok = newToken(token.COMMA, l.char)
 	case ';':
@@ -140,29 +168,26 @@ func (l *Lexer) NextToken() token.Token {
 	case '>':
 		tok = newToken(token.GREATER_THAN, l.char)
 	case '<':
-		if l.peekChar() == '=' {
+		switch l.peekChar() {
+		case '>':
+			tok = newPeekedToken(l, token.DIFFERENT)
+		case '=':
 			tok = newPeekedToken(l, token.LESS_THAN_EQUAL)
-		} else {
+		default:
 			tok = newToken(token.LESS_THAN, l.char)
 		}
 	case ':':
-		tok = newPeekedToken(l, token.ASSIGN)
-	case '=':
-		if l.peekChar() == '=' {
-			tok = newPeekedToken(l, token.DOUBLE_EQUAL)
+		if '=' == l.peekChar() {
+			tok = newPeekedToken(l, token.ASSIGN)
 		} else {
-			// In lists
+			tok = newToken(token.COLON, l.char)
+		}
+	case '=':
+		if '=' == l.peekChar() {
+			tok = newPeekedToken(l, token.EQUAL)
+		} else {
 			tok = newToken(token.ILLEGAL, l.char)
 		}
-	case '!':
-		if l.peekChar() == '=' {
-			tok = newPeekedToken(l, token.DIFFERENT)
-		} else {
-			tok = newToken(token.BANG, l.char)
-		}
-	case '"':
-		tok.Type = token.STRING
-		tok.Literal = l.readString()
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -173,10 +198,7 @@ func (l *Lexer) NextToken() token.Token {
 
 			return tok
 		} else if isDigit(l.char) {
-			tok.Type = token.INT
-			tok.Literal = l.readNumber()
-
-			return tok
+			return l.readNumber()
 		} else {
 			tok = newToken(token.ILLEGAL, l.char)
 		}

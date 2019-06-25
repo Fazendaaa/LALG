@@ -8,105 +8,107 @@ import (
 
 // TestNextToken :
 func TestNextToken(t *testing.T) {
-	input := `five := 5;ten := 10
+	input := `var five: integer := 5;const ten: integer := 10;
 
-add := function(x, y) x + y
+procedure testing(x: real, y: integer);
+5 + 10;
+10 - 5;
 
-result := add(five, ten)
-!-/*5;
-5 < 10 > 5;
-
-if (5 <= 10) {
-	return TRUE
-} else {
-	return FALSE;
-}
+if 5 <= 10 then
+	begin
+		5 / 5;
+		10.5 * 10.5;
+	end
+else
+	10.7;
 
 10 == 10;
-10 != 9
+10 <> 9;
 
-var foo := 10
+{just a comment}
+
+var foo: integer := 10
 foo := 5
-"foo"
-"bar"
-"foo bar"
 `
 
 	test := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
+		{token.VAR, "var"},
 		{token.IDENTIFIER, "five"},
+		{token.COLON, ":"},
+		{token.INTEGER_KEYWORD, "integer"},
 		{token.ASSIGN, ":="},
-		{token.INT, "5"},
+		{token.INTEGER, "5"},
 		{token.SEMICOLON, ";"},
+		{token.CONST, "const"},
 		{token.IDENTIFIER, "ten"},
+		{token.COLON, ":"},
+		{token.INTEGER_KEYWORD, "integer"},
 		{token.ASSIGN, ":="},
-		{token.INT, "10"},
-		{token.IDENTIFIER, "add"},
-		{token.ASSIGN, ":="},
-		{token.FUNCTION, "function"},
+		{token.INTEGER, "10"},
+		{token.SEMICOLON, ";"},
+		{token.PROCEDURE, "procedure"},
+		{token.IDENTIFIER, "testing"},
 		{token.LEFT_PARENTHESIS, "("},
 		{token.IDENTIFIER, "x"},
+		{token.COLON, ":"},
+		{token.REAL_KEYWORD, "real"},
 		{token.COMMA, ","},
 		{token.IDENTIFIER, "y"},
+		{token.COLON, ":"},
+		{token.INTEGER_KEYWORD, "integer"},
 		{token.RIGHT_PARENTHESIS, ")"},
-		{token.IDENTIFIER, "x"},
+		{token.SEMICOLON, ";"},
+		{token.INTEGER, "5"},
 		{token.PLUS, "+"},
-		{token.IDENTIFIER, "y"},
-		{token.IDENTIFIER, "result"},
-		{token.ASSIGN, ":="},
-		{token.IDENTIFIER, "add"},
-		{token.LEFT_PARENTHESIS, "("},
-		{token.IDENTIFIER, "five"},
-		{token.COMMA, ","},
-		{token.IDENTIFIER, "ten"},
-		{token.RIGHT_PARENTHESIS, ")"},
-		{token.BANG, "!"},
-		{token.MINUS, "-"},
-		{token.SLASH, "/"},
-		{token.ASTERISK, "*"},
-		{token.INT, "5"},
+		{token.INTEGER, "10"},
 		{token.SEMICOLON, ";"},
-		{token.INT, "5"},
-		{token.LESS_THAN, "<"},
-		{token.INT, "10"},
-		{token.GREATER_THAN, ">"},
-		{token.INT, "5"},
+		{token.INTEGER, "10"},
+		{token.MINUS, "-"},
+		{token.INTEGER, "5"},
 		{token.SEMICOLON, ";"},
 		{token.IF, "if"},
-		{token.LEFT_PARENTHESIS, "("},
-		{token.INT, "5"},
+		{token.INTEGER, "5"},
 		{token.LESS_THAN_EQUAL, "<="},
-		{token.INT, "10"},
-		{token.RIGHT_PARENTHESIS, ")"},
-		{token.BEGIN, "{"},
-		{token.RETURN, "return"},
-		{token.TRUE, "TRUE"},
-		{token.END, "}"},
+		{token.INTEGER, "10"},
+		{token.THEN, "then"},
+		{token.BEGIN, "begin"},
+		{token.INTEGER, "5"},
+		{token.SLASH, "/"},
+		{token.INTEGER, "5"},
+		{token.SEMICOLON, ";"},
+		{token.REAL, "10.5"},
+		{token.ASTERISK, "*"},
+		{token.REAL, "10.5"},
+		{token.SEMICOLON, ";"},
+		{token.END, "end"},
 		{token.ELSE, "else"},
-		{token.BEGIN, "{"},
-		{token.RETURN, "return"},
-		{token.FALSE, "FALSE"},
+		{token.REAL, "10.7"},
 		{token.SEMICOLON, ";"},
-		{token.END, "}"},
-		{token.INT, "10"},
-		{token.DOUBLE_EQUAL, "=="},
-		{token.INT, "10"},
+		{token.INTEGER, "10"},
+		{token.EQUAL, "=="},
+		{token.INTEGER, "10"},
 		{token.SEMICOLON, ";"},
-		{token.INT, "10"},
-		{token.DIFFERENT, "!="},
-		{token.INT, "9"},
+		{token.INTEGER, "10"},
+		{token.DIFFERENT, "<>"},
+		{token.INTEGER, "9"},
+		{token.SEMICOLON, ";"},
+		{token.LEFT_BRACES, "{"},
+		{token.IDENTIFIER, "just"},
+		{token.IDENTIFIER, "a"},
+		{token.IDENTIFIER, "comment"},
+		{token.RIGHT_BRACES, "}"},
 		{token.VAR, "var"},
 		{token.IDENTIFIER, "foo"},
+		{token.COLON, ":"},
+		{token.INTEGER_KEYWORD, "integer"},
 		{token.ASSIGN, ":="},
-		{token.INT, "10"},
+		{token.INTEGER, "10"},
 		{token.IDENTIFIER, "foo"},
 		{token.ASSIGN, ":="},
-		{token.INT, "5"},
-		{token.STRING, "foo"},
-		{token.STRING, "bar"},
-		{token.STRING, "foo bar"},
+		{token.INTEGER, "5"},
 		{token.EOF, ""},
 	}
 

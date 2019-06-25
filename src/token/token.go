@@ -13,54 +13,70 @@ const (
 	EOF     = "EOF"
 	ILLEGAL = "ILLEGAL"
 
-	INT        = "INT"
-	DOUBLE     = "DOUBLE"
-	STRING     = "STRING"
-	UNKNOWN    = "UNKNOWN"
+	VAR   = "VAR"
+	CONST = "CONST"
+
+	REAL_KEYWORD    = "REAL_KEYWORD"
+	INTEGER_KEYWORD = "INTEGER_KEYWORD"
+
+	INTEGER    = "INTEGER"
+	REAL       = "REAL"
 	IDENTIFIER = "IDENTIFIER"
 
-	VAR      = "VAR"
-	FUNCTION = "FUNCTION"
-	TRUE     = "TRUE"
-	FALSE    = "FALSE"
-	IF       = "IF"
-	ELSE     = "ELSE"
-	RETURN   = "RETURN"
+	FOR       = "FOR"
+	PROCEDURE = "PROCEDURE"
+	BEGIN     = "BEGIN"
+	END       = "END"
 
-	BANG               = "!"
-	EQUAL              = "="
-	PLUS               = "+"
-	MINUS              = "-"
-	SLASH              = "/"
-	ASTERISK           = "*"
+	IF   = "IF"
+	THEN = "THEN"
+	ELSE = "ELSE"
+
+	ASSIGN   = ":="
+	PLUS     = "+"
+	MINUS    = "-"
+	SLASH    = "/"
+	ASTERISK = "*"
+
 	LESS_THAN          = "<"
 	GREATER_THAN       = ">"
 	LESS_THAN_EQUAL    = "<="
 	GREATER_THAN_EQUAl = ">="
+	EQUAL              = "=="
+	DIFFERENT          = "<>"
 
 	COMMA             = ","
+	COLON             = ":"
 	SEMICOLON         = ";"
 	LEFT_PARENTHESIS  = "("
 	RIGHT_PARENTHESIS = ")"
-	BEGIN             = "{"
-	END               = "}"
-
-	ASSIGN       = ":="
-	DOUBLE_EQUAL = "=="
-	DIFFERENT    = "!="
+	RIGHT_BRACES      = "{"
+	LEFT_BRACES       = "}"
 )
 
 var keywords = map[string]TokenType{
-	"if":       IF,
-	"var":      VAR,
-	"TRUE":     TRUE,
-	"else":     ELSE,
-	"FALSE":    FALSE,
-	"return":   RETURN,
-	":=":       ASSIGN,
-	"function": FUNCTION,
-	"<":        LESS_THAN,
-	"<=":       LESS_THAN_EQUAL,
+	"if":        IF,
+	"var":       VAR,
+	"for":       FOR,
+	"end":       END,
+	"else":      ELSE,
+	"then":      THEN,
+	"+":         PLUS,
+	"const":     CONST,
+	"begin":     BEGIN,
+	"==":        EQUAL,
+	":":         COLON,
+	"-":         MINUS,
+	"/":         SLASH,
+	":=":        ASSIGN,
+	"*":         ASTERISK,
+	"procedure": PROCEDURE,
+	"<":         LESS_THAN,
+	">":         GREATER_THAN,
+	"real":      REAL_KEYWORD,
+	"integer":   INTEGER_KEYWORD,
+	"<=":        LESS_THAN_EQUAL,
+	">=":        GREATER_THAN_EQUAl,
 }
 
 // LookupIdentifier :

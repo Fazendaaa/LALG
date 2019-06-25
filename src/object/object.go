@@ -20,7 +20,7 @@ const (
 	NULL_OBJECT         = "NULL"
 	RETURN_VALUE_OBJECT = "RETURN_VALUE"
 	ERROR_OBJECT        = "ERROR"
-	FUNCTION_OBJECT     = "FUNCTION"
+	PROCEDURE_OBJECT     = "PROCEDURE"
 	STRING_OBJECT       = "STRING"
 	BUILTIN_OBJECT      = "BUILTIN"
 )
@@ -133,7 +133,7 @@ func (e *Error) Inspect() string {
 
 // Type :
 func (f *Function) Type() ObjectType {
-	return FUNCTION_OBJECT
+	return PROCEDURE_OBJECT
 }
 
 // Inspect :
